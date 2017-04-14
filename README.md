@@ -27,7 +27,7 @@ Architecture.* HPCA 2013.](https://users.ece.cmu.edu/~omutlu/pub/tldram_hpca13.p
 Copy and Initialization.* MICRO
 2013.](https://users.ece.cmu.edu/~omutlu/pub/rowclone_micro13.pdf)  
 [\[5\] Chang et al. *Improving DRAM Performance by Parallelizing Refreshes with
-Accesses.* HPCA 2014.](https://users.ece.cmu.edu/~omutlu/pub/dram-access-refresh-parallelization_hpca14.pdf)
+Accesses.* HPCA 2014.](https://users.ece.cmu.edu/~omutlu/pub/dram-access-refresh-parallelization_hpca14.pdf)  
 [\[6\] Myoungsoo Jung. *SCIC: A System C Interface Converter for DRAMSim.* 2011.](https://github.com/LBNL-CODEX/DRAMSim_SystemC)
 
 Thus we use it for the cycle-accurate memory model in SystemC design. 
@@ -56,9 +56,9 @@ Ramulator requires a C++11 compiler (e.g., `clang++`, `g++-5`).
 You may refer to [Ramulator git repo](https://github.com/CMU-SAFARI/ramulator) for more information about the details. In this project, we use [SystemC-2.3.1](http://accellera.org/downloads/standards/systemc) as the library. You need to download and compile it first. Then 
 you may change the SystemC library path accordingly in the Makefile. 
 
-$ cd ramulator
-$ make 
-$ make exe 
+$ cd ramulator  
+$ make   
+$ make exe   
        
 ## Simulation Output
 To be added.
