@@ -2,7 +2,7 @@
 SystemC is convenient for developing cycle-accurate hardware accelerators. However, many 
 hardware accelerators require delicate memory access for the sake of 
 performance while there are few open source cycle-accurate DDR models immediately 
-available for SystemC. Myoungsoo developed a SystemC interface on top of DRAMSim2 
+available for SystemC. Myoungsoo \[6\] developed a SystemC interface on top of DRAMSim2 
 which has limited DDR models supported. Ramulator is a fast and cycle-accurate 
 DRAM simulator \[1\] that supports a wide array of commercial, as well as 
 academic, DRAM standards:
