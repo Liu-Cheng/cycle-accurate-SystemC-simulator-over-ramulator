@@ -28,7 +28,7 @@ Copy and Initialization.* MICRO
 2013.](https://users.ece.cmu.edu/~omutlu/pub/rowclone_micro13.pdf)  
 [\[5\] Chang et al. *Improving DRAM Performance by Parallelizing Refreshes with
 Accesses.* HPCA 2014.](https://users.ece.cmu.edu/~omutlu/pub/dram-access-refresh-parallelization_hpca14.pdf)
-[\[6\] Myoungsoo Jung. *SCIC: A System C Interface Converter for DRAMSim.* 2011.] (https://github.com/LBNL-CODEX/DRAMSim_SystemC)
+[\[6\] Myoungsoo Jung. *SCIC: A System C Interface Converter for DRAMSim.* 2011.](https://github.com/LBNL-CODEX/DRAMSim_SystemC)
 
 Thus we use it for the cycle-accurate memory model in SystemC design. 
 In order to integrate ramulator for SystemC based hardware accelerator design, 
