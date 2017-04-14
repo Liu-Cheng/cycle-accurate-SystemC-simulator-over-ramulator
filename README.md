@@ -1,5 +1,6 @@
 # An example of using Ramulator as memory model in a cycle-accurate SystemC Design
-SystemC is convenient for developing cycle-accurate hardware accelerators. However, many 
+SystemC with a library for parallel hardware description is convenient 
+for developing cycle-accurate hardware accelerators. However, many 
 hardware accelerators require delicate memory access for the sake of 
 performance while there are few open source cycle-accurate DDR models immediately 
 available for SystemC. Myoungsoo \[6\] developed a SystemC interface on top of DRAMSim2 
@@ -30,6 +31,7 @@ Copy and Initialization.* MICRO
 Accesses.* HPCA 2014.](https://users.ece.cmu.edu/~omutlu/pub/dram-access-refresh-parallelization_hpca14.pdf)  
 [\[6\] Myoungsoo Jung. *SCIC: A System C Interface Converter for DRAMSim.* 2011.](https://github.com/LBNL-CODEX/DRAMSim_SystemC)
 
+With the flexible memory model, we explore hardware accelerators on various memory models. 
 Thus we use it for the cycle-accurate memory model in SystemC design. 
 In order to integrate ramulator for SystemC based hardware accelerator design, 
 we mainly solved the following problems in this project.
@@ -46,8 +48,8 @@ a determined aligned length of data which is 64-byte in most cases. This is
 not convenient for hardware accelerator design which has diverse burst transmission. 
 In this work, we developed a memory wrapper that provides arbitrary burst memory access.
 
-4) Finally, we developed a vector addition accelerator as an example. The users 
-may work on top of it for your own design.
+4) Finally, we developed a vector addition accelerator as an example demonstrating the integration 
+of the Ramulator and the SystemC based accelerator.
 
 Also note that we also change part of the Ramulator source code (mostly the Request.h). 
 
