@@ -31,10 +31,11 @@ Copy and Initialization.* MICRO
 Accesses.* HPCA 2014.](https://users.ece.cmu.edu/~omutlu/pub/dram-access-refresh-parallelization_hpca14.pdf)  
 [\[6\] Myoungsoo Jung. *SCIC: A System C Interface Converter for DRAMSim.* 2011.](https://github.com/LBNL-CODEX/DRAMSim_SystemC)
 
-With the flexible memory model, we explore hardware accelerators on various memory models. 
-Thus we use it for the cycle-accurate memory model in SystemC design. 
-In order to integrate ramulator for SystemC based hardware accelerator design, 
-we mainly solved the following problems in this project.
+Memory is critical to many hardware accelerators. With ramulator 
+we may explore hardware accelerators on various memory models. 
+Thus we use ramulator instead of DRAMSim2 for the cycle-accurate memory model. 
+In order to integrate ramulator in a SystemC design, 
+we solved the following problems in this project.
 
 1) Both Ramulator and SystemC have its own timing management, we basically pack the ramulator 
 as a SystemC thread and have it synchronized to the SystemC design. 
@@ -46,7 +47,7 @@ request sequence. Eventually the memory complies with a sequential consistency m
 
 3) Ramulator provides only basic memory request i.e. each memory request operates on 
 a determined aligned length of data which is 64-byte in most cases. This is 
-not convenient for hardware accelerator design which has diverse burst transmission. 
+not the usual case for hardware accelerator design which has diverse burst transmission. 
 In this work, we developed a memory wrapper that provides arbitrary burst memory access.
 
 4) Finally, we developed a vector addition accelerator as an example demonstrating the 
