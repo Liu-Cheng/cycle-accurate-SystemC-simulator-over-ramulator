@@ -41,22 +41,25 @@ as a SystemC thread and have it synchronized to the SystemC design.
 
 2) Ramulator provides only latency information but no memory content management 
 which is needed in many accelerator design. In this project, we keep the memory as 
-a dynamic vector and maintain the memory content based on sequential memory consistency.
+a dynamic vector and maintain the memory content based on the received memory 
+request sequence. Eventually the memory complies with a sequential consistency model.
 
 3) Ramulator provides only basic memory request i.e. each memory request operates on 
 a determined aligned length of data which is 64-byte in most cases. This is 
 not convenient for hardware accelerator design which has diverse burst transmission. 
 In this work, we developed a memory wrapper that provides arbitrary burst memory access.
 
-4) Finally, we developed a vector addition accelerator as an example demonstrating the integration 
-of the Ramulator and the SystemC based accelerator.
-
-Also note that we also change part of the Ramulator source code (mostly the Request.h). 
+4) Finally, we developed a vector addition accelerator as an example demonstrating the 
+use of Ramulator in a SystemC based accelerator.
 
 ## Getting Started
-Ramulator requires a C++11 compiler (e.g., `clang++`, `g++-5`).
-You may refer to [Ramulator git repo](https://github.com/CMU-SAFARI/ramulator) for more information about the details. In this project, we use [SystemC-2.3.1](http://accellera.org/downloads/standards/systemc) as the library. You need to download and compile it first. Then 
+In this project, we use [SystemC-2.3.1](http://accellera.org/downloads/standards/systemc) 
+as the library. You need to download and compile it first. Then 
 you may change the SystemC library path accordingly in the Makefile. 
+In order to compile Ramulator, a C++11 compiler (e.g., `clang++`, `g++-5`) is required. 
+You may refer to [Ramulator git repo](https://github.com/CMU-SAFARI/ramulator) 
+for more details. When the compilation environment is ready, you can compile 
+and run the example using the following commands.   
 
 $ cd ramulator  
 $ make   
