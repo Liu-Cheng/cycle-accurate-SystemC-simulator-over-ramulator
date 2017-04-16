@@ -291,9 +291,6 @@ void BurstOp::updateAddrVec() {
     }
 }
 
-// Needs to be fixed latter
-BurstOp::~BurstOp(){}
-
 long BurstOp::getDepartPeTime() const{
     return departPeTime;
 }

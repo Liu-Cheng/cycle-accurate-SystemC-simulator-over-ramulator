@@ -141,7 +141,6 @@ void MemWrapper::getBurstReq(){
 
             if(op.type == ramulator::Request::Type::READ){
                 counter++;
-                std::cout << counter << " burst requests are received." << std::endl;
             }
         }
         wait(peClkCycle, SC_NS);
@@ -389,8 +388,8 @@ void MemWrapper::run_acc(const Config& configs, Memory<T, Controller>& memory) {
         r.udf.departMemTime = r.udf.arriveMemTime + memClkCycle * latency;
         respQueue.push_back(r);
         reqStatus[r.udf.reqIdx] = true;
-        std::cout << "req: " << r.udf.reqIdx << " is returnned at " << sc_time_stamp() << std::endl;
-        std::cout << "req: " << r.udf.reqIdx << " " << r.arrive << " " << r.depart << std::endl;
+        //std::cout << "req: " << r.udf.reqIdx << " is returnned at " << sc_time_stamp() << std::endl;
+        //std::cout << "req: " << r.udf.reqIdx << " " << r.arrive << " " << r.depart << std::endl;
     };
 
     std::vector<int> addr_vec;
@@ -406,7 +405,7 @@ void MemWrapper::run_acc(const Config& configs, Memory<T, Controller>& memory) {
             stall = !memory.send(req);
             if (!stall){
                 if (req.type == Request::Type::READ){ 
-                    std::cout << "req: " << req.udf.reqIdx << " is issued at " << sc_time_stamp() << std::endl;
+                    //std::cout << "req: " << req.udf.reqIdx << " is issued at " << sc_time_stamp() << std::endl;
                     reads++;
                 }
                 // At this time, we can already assume that the write operation is done.

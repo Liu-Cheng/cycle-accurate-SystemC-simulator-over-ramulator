@@ -34,6 +34,9 @@ depend: $(OBJDIR)/.depend
 exe:
 	./ramulator configs/DDR3-config.cfg --mode=acc dram.trace
 
+gdb:
+	gdb --args ./ramulator configs/DDR3-config.cfg --mode=acc dram.trace
+
 $(OBJDIR)/.depend: $(SRCS)
 	@mkdir -p $(OBJDIR)
 	@rm -f $(OBJDIR)/.depend

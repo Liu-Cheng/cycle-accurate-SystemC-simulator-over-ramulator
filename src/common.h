@@ -106,8 +106,6 @@ struct BurstOp{
 
         BurstOp(bool _valid = false);
 
-        ~BurstOp();
-
     private:
         long departPeTime;
         long arriveMemTime;
@@ -119,6 +117,13 @@ struct BurstOp{
 
         long getAlignedAddr() const;
         int getOffset() const;
+};
+
+// This is used to identify the memory access port
+enum PortType{
+    VA,
+    VB,
+    VP
 };
 
 // This macro is used to locate the code position.

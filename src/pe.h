@@ -28,8 +28,9 @@ class pe : public sc_module{
         // public member function
         void sendMemReq();
         void getMemResp();
-        void issueReadReq();
-        void issueWriteReq();
+        void issueVaReadReq();
+        void issueVbReadReq();
+        void issueVpWriteReq();
         void runtimeMonitor();
         void dumpResp();
         void setPeClkCycle(int _peClkCycle);
@@ -40,13 +41,15 @@ class pe : public sc_module{
                 long addr, 
                 int length, 
                 int localAddr, 
-                std::vector<int> &buffer);
+                std::vector<int> &buffer,
+                PortType ptype);
 
         long createReadBurstReq(
                 ramulator::Request::Type type, 
                 long addr, 
                 int length, 
-                int localAddr);
+                int localAddr,
+                PortType ptype);
 
         void setDataWidth(int width);
 
@@ -69,9 +72,13 @@ class pe : public sc_module{
         bool vbReady;
         bool vpReady;
 
-        // The request queue is shared by all the different read/write ports
-        std::list<BurstOp> burstReqQueue;
-        std::list<BurstOp> burstRespQueue;
+        // Each (read,write) queue pair is usedd by one memory access port
+        std::list<BurstOp> vaBurstReqQueue;
+        std::list<BurstOp> vbBurstReqQueue;
+        std::list<BurstOp> vpBurstReqQueue;
+        std::list<BurstOp> vaBurstRespQueue;
+        std::list<BurstOp> vbBurstRespQueue;
+        std::list<BurstOp> vpBurstRespQueue;
 
         // It keeps the status of the burst requests. If a burst with burstIdx is not found 
         // in the mapper, it doesn't exist. If it is found to be false, the request is generated 
@@ -88,6 +95,10 @@ class pe : public sc_module{
         bool isBurstReqQueueEmpty();
         bool isMemReqQueueEmpty();
         void init();
+        void vaRespProcess();
+        void vbRespProcess();
+        void vpRespProcess();
+        PortType burstReqArbiter(PortType winner);
 };
 
 #endif
