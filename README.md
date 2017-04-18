@@ -3,9 +3,9 @@ SystemC which is a C++ library for parallel hardware description is efficient
 for developing cycle-accurate hardware accelerators. While 
 memory is critical to many hardware accelerator design and delicate memory access 
 is required for the sake of performance as well as other design trade-offs,there are few open 
-source cycle-accurate DDR models immediately available for SystemC.  
+source cycle-accurate DDR models immediately available for SystemC. 
 Myoungsoo \[6\] developed a SystemC interface on top of DRAMSim2 
-which has limited DDR models supported. Ramulator is ralative new, and it  a fast 
+which has limited DDR models supported. Ramulator is ralative new and it is a fast 
 and cycle-accurate DRAM simulator \[1\] that supports a wide array of commercial, as well as 
 academic, DRAM standards:
 
@@ -32,7 +32,8 @@ Copy and Initialization.* MICRO
 Accesses.* HPCA 2014.](https://users.ece.cmu.edu/~omutlu/pub/dram-access-refresh-parallelization_hpca14.pdf)  
 [\[6\] Myoungsoo Jung. *SCIC: A System C Interface Converter for DRAMSim.* 2011.](https://github.com/LBNL-CODEX/DRAMSim_SystemC)
 
-With Ramulator we may explore hardware accelerators on many state-of-art memory models.
+Thus it is adopted in this project. With Ramulator, we may explore hardware 
+accelerators on many state-of-art memory models.
 As it is initially devloped for memory architecture research and can't be used directly in a 
 SystemC design, we aim to integrate ramulator in a SystemC design in this project. To utilize the 
 Ramulator as a memory model in a SystemC design, we mainly solved the following problems:
