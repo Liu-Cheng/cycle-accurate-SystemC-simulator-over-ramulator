@@ -1,0 +1,4 @@
+vecLen 65536
+bufferLen 4096
+portNum 3
+logon 1

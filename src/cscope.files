@@ -19,6 +19,8 @@ GDDR5.cpp
 GDDR5.h
 Gem5Wrapper.cpp
 Gem5Wrapper.h
+graph.cpp
+graph.h
 HBM.cpp
 HBM.h
 LPDDR3.cpp
@@ -47,6 +49,7 @@ StatType.cpp
 StatType.h
 TLDRAM.cpp
 TLDRAM.h
+User.h
 WideIO2.cpp
 WideIO2.h
 WideIO.cpp

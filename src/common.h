@@ -6,37 +6,10 @@
 #include "Request.h"
 #include "systemc.h"
 
-std::ostream& operator<< (std::ostream &os, const ramulator::Request::Type &type);
+std::ostream& operator<<(std::ostream &os, const ramulator::Request::Type &type);
 
-class GL{
-    public:
-        // Application parameters
-        static int vaLen;
-        static int vbLen;
-        static int vpLen;
-
-        // Initial va, vb, and vp address. 
-        // Suppose they stay in a continuous address space.
-        static long vaMemAddr;
-        static long vbMemAddr;
-        static long vpMemAddr;
-
-        // Processing element setup
-        static int vaBufferDepth;
-        static int vbBufferDepth;
-        static int vpBufferDepth;
-
-        // It will be reset based on memory configuration
-        static int burstLen; 
-        static int burstAddrWidth;
-        static long getReqIdx();
-        static long getBurstIdx();
-
-    private:
-        static long reqIdx;
-        static long burstIdx;
-        static int getBurstAddrWidth();
-};
+// This macro is used to locate the code position.
+#define HERE do {std::cout <<"File: " << __FILE__ << " Line: " << __LINE__ << std::endl;} while(0)
 
 // ----------------------------------------------------------------------------
 // The burst operation is decoded in the memory wrapper and 
@@ -56,22 +29,75 @@ struct BurstOp{
     public:
         bool valid;
         ramulator::Request::Type type;
+        int portIdx;
         long burstIdx;
         int peIdx;
         long addr;
         int length;
-
-        // corresponding local buffer address
-        int localAddr; 
 
         // Each burst operation consists of multiple basic memory requests/responses 
         // and the memory opid and address will be stored in the vector.
         std::vector<long> reqVec;
         std::vector<long> addrVec;
 
+        long departPeTime;
+        long arriveMemTime;
+        long departMemTime;
+        long arrivePeTime;
+
         void convertToReq(std::list<ramulator::Request> &reqQueue);
-        void burstReqToBuffer(std::vector<int> &buffer, int localAddr);
-        void bufferToBurstReq(std::vector<int> &buffer, int localAddr);
+
+        template<typename T>
+        void burstReqToBuffer(std::list<T> &buffer){
+            char* p = (char*) malloc(sizeof(T));
+            if(length%sizeof(T) != 0){
+                HERE;
+                std::cout << "The burst request length is not aligned to the buffer type.";
+                std::cout << std::endl;
+                exit(EXIT_FAILURE);
+            }
+
+            for(int i = 0; i < length;){
+                for(size_t j = 0; j < sizeof(T); j++){
+                    *(p+j) = data[i];
+                    i++;
+                }
+                buffer.push_back(*((T*)p));
+            }
+            delete p;
+        }
+
+
+        // This fucntion copies the data from local buffer to the write burst request data section.
+        template<typename T>
+        void bufferToBurstReq(std::list<T> &buffer){
+            T *p = (T*)malloc(sizeof(T));
+            int size = length/sizeof(T);
+            for(int i = 0; i < size; i++){
+                *p = buffer.front();
+                buffer.pop_front();
+                for(int j = 0; j < (int)sizeof(T); j++){
+                    data.push_back(*((char*)p+j));
+                }
+            }
+        }
+
+        template<typename T>
+        T removeFrontData(){
+            T t;
+            T* p = &t;
+            for(int i = 0; i < (int)sizeof(T); i++){
+                auto it = data.begin();
+                *((char*)p + i) = (*it);
+                data.erase(it);
+            }
+            return t;
+        }
+
+        bool isDataAvail(){
+            return !data.empty();
+        };
+
 
         // Overloaded operators that are requred to support sc_in/out port
         void operator=(const BurstOp &op);
@@ -79,17 +105,7 @@ struct BurstOp{
         friend void sc_trace(sc_trace_file *tf, const BurstOp &op, const std::string &name);
         friend std::ostream& operator<<(std::ostream &os, const BurstOp &op);
 
-        void setDepartPeTime(long departTime);
-        void setArrivePeTime(long arriveTime);
-        void setDepartMemTime(long departTime);
-        void setArriveMemTime(long arriveTime);
-
-        long getDepartPeTime() const;
-        long getArrivePeTime() const;
-        long getDepartMemTime() const;
-        long getArriveMemTime() const;
         int getReqNum() const;
-
         void updateReqVec();
         void updateAddrVec();
 
@@ -98,20 +114,15 @@ struct BurstOp{
 
         // Constructors
         BurstOp(ramulator::Request::Type _type, 
-                long _burstIdx, 
                 int _peIdx, 
+                int _portIdx,
+                long _burstIdx, 
                 long _addr, 
-                int _length,
-                int localAddr);
+                int _length);
 
         BurstOp(bool _valid = false);
 
     private:
-        long departPeTime;
-        long arriveMemTime;
-        long departMemTime;
-        long arrivePeTime;
-
         // Attached data. 
         std::vector<char> data;
 
@@ -119,14 +130,41 @@ struct BurstOp{
         int getOffset() const;
 };
 
-// This is used to identify the memory access port
-enum PortType{
-    VA,
-    VB,
-    VP
+class GL{
+    public:
+        // Application parameters
+        static int vecLen;
+        static int bufferLen;
+        static long vecMemAddr0;
+        static long vecMemAddr1;
+        static long vecMemAddr2;
+        static long resultMemAddr;
+
+        static int baseLen;
+        static int burstLen; 
+        static int burstAddrWidth;
+
+        static int portNum;
+        static int logon;
+
+        // Gloabl container that stores all the bursts created in the bfs.
+        // When the a burst is no longer used, the allocated memory will be 
+        // released and the corresponding element in the vector will be set 
+        // to be NULL.
+        static std::vector<BurstOp*> bursts;
+
+        // A long request will be split into base length of 
+        // bursts such that the burst will not be overflow 
+        // the buffer and block shorter bursts coming afterwards.
+        static long getReqIdx();
+        static long getBurstIdx();
+        static void cfgBfsParam(const std::string &cfgFileName);
+
+    private:
+        static long reqIdx;
+        static long burstIdx;
+        static int getBurstAddrWidth();
 };
 
-// This macro is used to locate the code position.
-#define HERE do {std::cout <<"File: " << __FILE__ << " Line: " << __LINE__ << std::endl;} while(0)
 
 #endif

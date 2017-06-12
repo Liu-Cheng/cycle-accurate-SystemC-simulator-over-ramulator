@@ -8,97 +8,74 @@
 #include "Request.h"
 #include "common.h"
 #include "systemc.h"
+#include "readIF.h"
+#include "writeIF.h"
 
 class pe : public sc_module{
 
     SC_HAS_PROCESS(pe);
 
     public:
-        // Even though there may be multiple requests generated at the same time,
-        // only one of the request goes to the ramulator eventually in each cycle.
-        sc_out<BurstOp> burstReq;
-        sc_in<BurstOp> burstResp;
+        sc_in<bool> peClk;
 
-        // pe parameter
+        // signals for read memory
+        sc_in<float> readDin0;
+        sc_in<bool> readValid0;
+
+        sc_out<bool> readEna0;
+        sc_out<long> readAddr0;
+        sc_out<int> readLength0;
+
+        sc_in<float> readDin1;
+        sc_in<bool> readValid1;
+
+        sc_out<bool> readEna1;
+        sc_out<long> readAddr1;
+        sc_out<int> readLength1;
+
+        // signals for write memory
+        sc_out<float> writeDout;
+        sc_out<bool> writeValid;
+
+        sc_out<bool> writeEna;
+        sc_out<long> writeAddr;
+        sc_out<int> writeLength;
+
+        sc_in<bool> writeComplete;
+        sc_out<bool> computeDone;
+
         int peIdx;
 
         pe(sc_module_name _name, int _peIdx, int _peClkCycle);
         ~pe(){};
 
-        // public member function
-        void sendMemReq();
-        void getMemResp();
-        void issueVaReadReq();
-        void issueVbReadReq();
-        void issueVpWriteReq();
-        void runtimeMonitor();
-        void dumpResp();
-        void setPeClkCycle(int _peClkCycle);
-        void vecAdd();
-        void statusMonitor();
-        long createWriteBurstReq(
-                ramulator::Request::Type type, 
-                long addr, 
-                int length, 
-                int localAddr, 
-                std::vector<int> &buffer,
-                PortType ptype);
-
-        long createReadBurstReq(
-                ramulator::Request::Type type, 
-                long addr, 
-                int length, 
-                int localAddr,
-                PortType ptype);
-
-        void setDataWidth(int width);
+        void sigInit();
 
     private:
+        std::vector<std::list<float>> queues;
         int peClkCycle;
-        int dataWidth;      // # of bytes can be transmitted to/from memory in each cycle
-        std::vector<int> va; // Input of vector a
-        std::vector<int> vb; // Input of vector b
-        std::vector<int> vp; // result of the element-wise production of a and b
 
-        bool allVaReqGenerated;
-        bool allVaRespReceived;
-        bool allVbReqGenerated;
-        bool allVbRespReceived;
-        bool allVpReqGenerated;
-        bool allVpRespReceived;
+        // Registers for sending
+        int resLenVec0;
+        int availBufferVec0;
+        int resLenVec1;
+        int availBufferVec1;
+        int resLenVec;
 
-        bool computingDone;
-        bool vaReady;
-        bool vbReady;
-        bool vpReady;
+        int readCounter0;
+        int readCounter1;
+        int writeCounter;
+        int localCounter;
+        int writeReqCounter;
+        int writeReqNum;
+        bool allWriteReqSent;
 
-        // Each (read,write) queue pair is usedd by one memory access port
-        std::list<BurstOp> vaBurstReqQueue;
-        std::list<BurstOp> vbBurstReqQueue;
-        std::list<BurstOp> vpBurstReqQueue;
-        std::list<BurstOp> vaBurstRespQueue;
-        std::list<BurstOp> vbBurstRespQueue;
-        std::list<BurstOp> vpBurstRespQueue;
-
-        // It keeps the status of the burst requests. If a burst with burstIdx is not found 
-        // in the mapper, it doesn't exist. If it is found to be false, the request is generated 
-        // but is not responsed yet. If it is set true, the request is responsed.
-        // These data structure will remain valid until the end of the object life.
-        std::map<long, bool> vaBurstReqStatus;
-        std::map<long, bool> vbBurstReqStatus;
-        std::map<long, bool> vpBurstReqStatus;
-
-        std::list<long> vaReqQueue;
-        std::list<long> vbReqQueue;
-        std::list<long> vpReqQueue;
-
-        bool isBurstReqQueueEmpty();
-        bool isMemReqQueueEmpty();
         void init();
-        void vaRespProcess();
-        void vbRespProcess();
-        void vpRespProcess();
-        PortType burstReqArbiter(PortType winner);
+        void readVec0();
+        void readVec1();
+        void writeVec();
+        void vecAdd();
+        void statusMonitor();
 };
 
 #endif

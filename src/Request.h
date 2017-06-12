@@ -17,11 +17,10 @@ namespace ramulator
         long burstIdx;
         long reqIdx; 
         int peIdx;
+        int portIdx;
 
-        long departPeTime; 
         long arriveMemTime;
         long departMemTime;
-        long arrivePeTime;
     };
 
     class Request
